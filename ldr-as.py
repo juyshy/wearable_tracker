@@ -26,6 +26,7 @@ class AnalogPlot:
       self.ax = deque([0.0]*maxLen)
       self.ay = deque([0.0]*maxLen)
       self.maxLen = maxLen
+      self.ofile = open('test.txt','w') 
 
   # add to buffer
   def addToBuf(self, buf, val):
@@ -49,6 +50,7 @@ class AnalogPlot:
           # print data
           if(len(data) == 2):
               self.add(data)
+              self.ofile.write(line)
               a0.set_data(range(self.maxLen), self.ax)
               a1.set_data(range(self.maxLen), self.ay)
       except KeyboardInterrupt:
@@ -61,6 +63,7 @@ class AnalogPlot:
       # close serial
       self.ser.flush()
       self.ser.close()    
+      self.ofile.close()
 
 # main() function
 def main():
