@@ -27,14 +27,16 @@ import matplotlib.animation as animation
 # plot class
 class AnalogPlot:
   # constr
-  def __init__(self, strPort = "COM3", maxLen =100, baudRate =  115200):
+  def __init__(self, strPort = "COM3", maxLen =100, baudRate =  115200, savefile = False):
       # open serial port
       self.ser = serial.Serial(strPort, baudRate)
 
       self.ax = deque([0.0]*maxLen)
       self.ay = deque([0.0]*maxLen)
       self.maxLen = maxLen
-      self.ofile = open('test.txt','w')
+      self.savefile = savefile
+      if self.savefile:
+          self.ofile = open('test.txt','w')
 
   # add to buffer
   def addToBuf(self, buf, val):
@@ -49,6 +51,7 @@ class AnalogPlot:
       assert(len(data) == 2)
       self.addToBuf(self.ax, data[0])
       self.addToBuf(self.ay, data[1])
+      #self.addToBuf(self.ay, data[2])
 
   # update plot
   def update(self, frameNum, a0, a1):
@@ -61,7 +64,8 @@ class AnalogPlot:
           if(len(data) == 2):
               self.add(data)
               #print line
-              self.ofile.write(line)
+              if self.savefile:
+                  self.ofile.write(line)
               a0.set_data(range(self.maxLen), self.ax)
               a1.set_data(range(self.maxLen), self.ay)
       except KeyboardInterrupt:
@@ -74,7 +78,8 @@ class AnalogPlot:
       # close serial
       self.ser.flush()
       self.ser.close()
-      self.ofile.close()
+      if self.savefile:
+          self.ofile.close()
 
 # main() function
 def main():
