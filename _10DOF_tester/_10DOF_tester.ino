@@ -38,9 +38,12 @@ void loop(void)
   
   int val_x = event.acceleration.x * 100;
   int val_y = event.acceleration.y * 100;
+  int val_z = event.acceleration.z * 100;
   Serial.print(val_x);
   Serial.print(" ");
   Serial.print(val_y);
+  Serial.print(" ");
+  Serial.print(val_z);
   Serial.print("\n");
 
   delay(100);

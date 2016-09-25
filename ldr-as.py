@@ -33,6 +33,7 @@ class AnalogPlot:
 
       self.ax = deque([0.0]*maxLen)
       self.ay = deque([0.0]*maxLen)
+      self.az = deque([0.0]*maxLen)
       self.maxLen = maxLen
       self.savefile = savefile
       if self.savefile:
@@ -48,26 +49,27 @@ class AnalogPlot:
 
   # add data
   def add(self, data):
-      assert(len(data) == 2)
+      assert(len(data) == 3)
       self.addToBuf(self.ax, data[0])
       self.addToBuf(self.ay, data[1])
-      #self.addToBuf(self.ay, data[2])
+      self.addToBuf(self.az, data[2])
 
   # update plot
-  def update(self, frameNum, a0, a1):
+  def update(self, frameNum, a0, a1, a2):
       try:
           line = self.ser.readline()
           if "Adafruit" in line:
               line = line.replace("Adafruit 10DOF Tester", "")
           data = [float(val) for val in line.split()]
           # print data
-          if(len(data) == 2):
+          if(len(data) == 3):
               self.add(data)
-              #print line
+              print line
               if self.savefile:
                   self.ofile.write(line)
               a0.set_data(range(self.maxLen), self.ax)
               a1.set_data(range(self.maxLen), self.ay)
+              a2.set_data(range(self.maxLen), self.az)
       except KeyboardInterrupt:
           print('exiting')
 
@@ -107,8 +109,9 @@ def main():
   ax = plt.axes(xlim=(0, 100), ylim=(-1100, 1100))
   a0, = ax.plot([], [])
   a1, = ax.plot([], [])
+  a2, = ax.plot([], [])
   anim = animation.FuncAnimation(fig, analogPlot.update,
-                                 fargs=(a0, a1),
+                                 fargs=(a0, a1, a2),
                                  interval=30)
 
   # show plot
