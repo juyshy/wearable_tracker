@@ -16,4 +16,4 @@ Usage:
 
 
 video:
-https://www.youtube.com/edit?video_id=E5RJ3RcSVAI
+https://youtu.be/E5RJ3RcSVAI
